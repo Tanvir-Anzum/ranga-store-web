@@ -1,4 +1,5 @@
 const loadProducts = () => {
+  // Data which I am going to use 
   const data = [
     {
       id: 1,
@@ -207,14 +208,17 @@ const loadProducts = () => {
       rating: { rate: 3.6, count: 145 },
     },
   ]
-  console.log(data[0].rating)
+  // "showProducts" function is called,it is used for showing data in ui
   showProducts(data)
 }
 
 // show all product in UI
 const showProducts = (products) => {
   const allProducts = products.map((pd) => pd)
+  
+  // looping through all the products(each of the products is an array element)
   for (const product of allProducts) {
+ 
     // image related issue has been solved
     const image = product.image
     const div = document.createElement('div')
@@ -223,24 +227,26 @@ const showProducts = (products) => {
       <div>
        <img class="product-image" src=${image}></img>
       </div>
-
       <p>Category: ${product.category}</p>
       <h2>Price: $ ${product.price}</h2>
       <h5>average rating: <span id="averageRating">${product.rating.rate}</span> <span id="howManyRatings">rated by: ${product.rating.count} people</span></h5>
-      
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now">add to cart</button>
       <button id="details-btn" class="details-button">Details</button></div>
       `
+      // appending the "div" to "all-products"
     document.getElementById('all-products').appendChild(div)
   }
 }
 
 let count = 0
+
+// "addToCart" function calls other functions to update Price,TaxAndCharge and the grand total
 const addToCart = (id, price) => {
   count = count + 1
   updatePrice('price', price)
   updateTaxAndCharge()
   document.getElementById('total-Products').innerText = count
+
   // Total price was not showing.This issue is solved
   updateTotal()
 }
@@ -248,7 +254,6 @@ const addToCart = (id, price) => {
 const getInputValue = (id) => {
   const element = document.getElementById(id).innerText
   const converted = parseFloat(element)
-  // const converted = parseInt(element)
   return converted
 }
 
@@ -257,13 +262,13 @@ const updatePrice = (id, value) => {
   const convertedOldPrice = getInputValue(id)
   const convertPrice = parseFloat(value)
   const total = convertedOldPrice + convertPrice
-  // document.getElementById(id).innerText = Math.round(total)
   document.getElementById(id).innerText = total.toFixed(2)
 }
 
 // set innerText function
 const setInnerText = (id, value) => {
-  // value = Math.round(value)
+
+  // math.round function was being used here,which has been removed
   value = parseFloat(value)
   document.getElementById(id).innerText = value.toFixed(2)
 }
@@ -271,6 +276,8 @@ const setInnerText = (id, value) => {
 // update delivery charge and total Tax
 const updateTaxAndCharge = () => {
   const priceConverted = getInputValue('price')
+
+  // using conditions to determine what will be the delivery-charge and total-tax in differet cases
   if (priceConverted > 200) {
     setInnerText('delivery-charge', 30)
     setInnerText('total-tax', priceConverted * 0.2)
@@ -296,5 +303,6 @@ const updateTotal = () => {
   modifiedGrandTotal = modifiedGrandTotal.toFixed(2)
   document.getElementById('total').innerText = modifiedGrandTotal
 }
-//console.log(data[0].rating)
+
+// calling loadProducts function
 loadProducts()
