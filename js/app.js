@@ -289,12 +289,10 @@ const updateTaxAndCharge = () => {
   }
   if (priceConverted > 400) {
     setInnerText('delivery-charge', 50)
-
     setInnerText('total-tax', priceConverted * 0.3)
   }
   if (priceConverted > 500) {
     setInnerText('delivery-charge', 60)
-
     setInnerText('total-tax', priceConverted * 0.4)
   }
 }
