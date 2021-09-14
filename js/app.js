@@ -1,3 +1,5 @@
+let converted = 0
+let convertedNewPrice = 0
 const loadProducts = () => {
   // Data which I am going to use
   const data = [
@@ -238,9 +240,7 @@ const showProducts = (products) => {
     document.getElementById('all-products').appendChild(div)
   }
 }
-
 let count = 0
-
 // "addToCart" function calls other functions to update Price,TaxAndCharge and the grand total
 const addToCart = (id, price) => {
   count = count + 1
@@ -251,39 +251,49 @@ const addToCart = (id, price) => {
   // Total price was not showing.This issue is solved by calling updateTotal()
   updateTotal()
 }
-
 const getInputValue = (id) => {
   const element = document.getElementById(id).innerText
-
   // parseInt() was used,it has been corrected by using parseFloat
-  //const converted = parseInt(element)
-  const converted = parseFloat(element)
+  if (id == 'price' || id == 'total-tax') {
+    converted = parseFloat(element)
+  } else {
+    converted = parseInt(element)
+  }
   return converted
 }
-
-// main price update function
 const updatePrice = (id, value) => {
   const convertedOldPrice = getInputValue(id)
-  const convertPrice = parseFloat(value)
-  const total = convertedOldPrice + convertPrice
-
-  // math.round function was being used here,which has been removed
-  //document.getElementById(id).innerText = Math.round(total)
-  document.getElementById(id).innerText = total.toFixed(2)
+  if (id == 'price' || id == 'total-tax') {
+    convertedNewPrice = parseFloat(value)
+    document.getElementById(id).innerText = value.toFixed(2)
+  } else {
+    convertedNewPrice = parseInt(value)
+    document.getElementById(id).innerText = value
+  }
+  const total = convertedOldPrice + convertedNewPrice
+  // Math.round() was used here,which does not give us the exact value.So we made a small corection
+  //  document.getElementById(id).innerText = Math.round(total)
+  if (id == 'price' || id == 'total-tax') {
+    document.getElementById(id).innerText = total.toFixed(2)
+  } else {
+    document.getElementById(id).innerText = total
+  }
 }
-
 // set innerText function
 const setInnerText = (id, value) => {
   // math.round function was being used here,which has been removed
   //document.getElementById(id).innerText = Math.round(value)
-  value = parseFloat(value)
-  document.getElementById(id).innerText = value.toFixed(2)
+  if (id === 'price' || id === 'total-tax') {
+    value = parseFloat(value)
+    document.getElementById(id).innerText = value.toFixed(2)
+  } else {
+    value = parseInt(value)
+    document.getElementById(id).innerText = value
+  }
 }
-
 // update delivery charge and total Tax
 const updateTaxAndCharge = () => {
   const priceConverted = getInputValue('price')
-
   // using conditions to determine what will be the delivery-charge and total-tax in differet cases
   if (priceConverted > 200) {
     setInnerText('delivery-charge', 30)
@@ -298,7 +308,6 @@ const updateTaxAndCharge = () => {
     setInnerText('total-tax', priceConverted * 0.4)
   }
 }
-
 let modifiedGrandTotal = 0
 //grandTotal update function
 const updateTotal = () => {
@@ -310,6 +319,5 @@ const updateTotal = () => {
   modifiedGrandTotal = modifiedGrandTotal.toFixed(2)
   document.getElementById('total').innerText = modifiedGrandTotal
 }
-
 // calling loadProducts function
 loadProducts()
